@@ -28,6 +28,9 @@ dependencies:
   path: ^1.9.1
   logger: ^2.7.0
   dio: ^5.7.0
+  build_runner: ^2.15.0
+  json_serializable: ^6.14.0
+  json_annotation: ^4.12.0
 
 
 

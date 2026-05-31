@@ -1,5 +1,11 @@
-import 'package:devblogs/features/auth/domain/entities/user.dart';
+import 'package:devblogs/features/auth/domain/entities/auth_response.dart';
 
-abstract class AuthRepository {
-  Future<User> login(String email, String password);
+abstract interface class AuthRepository {
+  Future<AuthResponse> register({
+    required String username,
+    required String email,
+    required String password,
+  });
+
+  Future<AuthResponse> login({required String email, required String password});
 }

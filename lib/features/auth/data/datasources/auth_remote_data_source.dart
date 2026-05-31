@@ -1,35 +1,32 @@
-import 'package:devblogs/core/error/exceptions.dart';
 import 'package:devblogs/core/network/api_client.dart';
-import 'package:devblogs/features/auth/data/models/user_model.dart';
-import 'package:dio/dio.dart';
+import 'package:devblogs/features/auth/data/models/auth_response_model.dart';
 
-abstract class AuthRemoteDataSource {
-  Future<UserModel> login(String email, String password);
+abstract interface class AuthRemoteDataSource {
+  Future<AuthResponseModel> register({
+    required String username,
+    required String email,
+    required String password,
+  });
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
+  static const String _registerEndpoint = '/auth/register';
+
   final ApiClient apiClient;
 
   AuthRemoteDataSourceImpl(this.apiClient);
 
   @override
-  Future<UserModel> login(String email, String password) async {
-    try {
-      final response = await apiClient.post(
-        '/login',
-        data: {
-          'email': email,
-          'password': password,
-        },
-      );
-      if (response.data == null) {
-        throw const ServerException('Null response from server');
-      }
-      return UserModel.fromJson(response.data as Map<String, dynamic>);
-    } on DioException catch (e) {
-      throw ServerException(e.message ?? 'Server error occurred');
-    } catch (e) {
-      throw ServerException(e.toString());
-    }
+  Future<AuthResponseModel> register({
+    required String username,
+    required String email,
+    required String password,
+  }) async {
+    final response = await apiClient.post(
+      _registerEndpoint,
+      data: {'username': username, 'email': email, 'password': password},
+    );
+
+    return AuthResponseModel.fromJson(response.data as Map<String, dynamic>);
   }
 }

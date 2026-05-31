@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:devblogs/core/utils/app_logger.dart';
 
 class ApiClient {
   final Dio dio;
@@ -10,11 +11,19 @@ class ApiClient {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) async {
-    return await dio.get(
-      path,
-      queryParameters: queryParameters,
-      options: options,
-    );
+    AppLogger.i('GET Request: $path');
+    try {
+      final response = await dio.get(
+        path,
+        queryParameters: queryParameters,
+        options: options,
+      );
+      AppLogger.i('GET Response: ${response.statusCode} - ${response.data}');
+      return response;
+    } on DioException catch (e) {
+      AppLogger.e('GET Error: $path', e.message);
+      rethrow;
+    }
   }
 
   Future<Response> post(
@@ -23,12 +32,20 @@ class ApiClient {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) async {
-    return await dio.post(
-      path,
-      data: data,
-      queryParameters: queryParameters,
-      options: options,
-    );
+    AppLogger.i('POST Request: $path | Data: $data');
+    try {
+      final response = await dio.post(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+      );
+      AppLogger.i('POST Response: ${response.statusCode} - ${response.data}');
+      return response;
+    } on DioException catch (e) {
+      AppLogger.e('POST Error: $path', e.message);
+      rethrow;
+    }
   }
 
   Future<Response> put(
@@ -37,12 +54,20 @@ class ApiClient {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) async {
-    return await dio.put(
-      path,
-      data: data,
-      queryParameters: queryParameters,
-      options: options,
-    );
+    AppLogger.i('PUT Request: $path | Data: $data');
+    try {
+      final response = await dio.put(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+      );
+      AppLogger.i('PUT Response: ${response.statusCode} - ${response.data}');
+      return response;
+    } on DioException catch (e) {
+      AppLogger.e('PUT Error: $path', e.message);
+      rethrow;
+    }
   }
 
   Future<Response> delete(
@@ -51,11 +76,20 @@ class ApiClient {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) async {
-    return await dio.delete(
-      path,
-      data: data,
-      queryParameters: queryParameters,
-      options: options,
-    );
+    AppLogger.i('DELETE Request: $path');
+    try {
+      final response = await dio.delete(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+      );
+      AppLogger.i('DELETE Response: ${response.statusCode} - ${response.data}');
+      return response;
+    } on DioException catch (e) {
+      AppLogger.e('DELETE Error: $path', e.message);
+      rethrow;
+    }
   }
 }
+

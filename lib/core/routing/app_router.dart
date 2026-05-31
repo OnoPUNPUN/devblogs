@@ -1,5 +1,8 @@
+import 'package:devblogs/core/di/injection_container.dart';
+import 'package:devblogs/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:devblogs/features/auth/presentation/pages/login_screen.dart';
 import 'package:devblogs/features/auth/presentation/pages/sign_up_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRouter {
@@ -14,7 +17,10 @@ class AppRouter {
       GoRoute(
         path: SingUpScreen.name,
         name: SingUpScreen.name,
-        builder: (context, state) => const SingUpScreen(),
+        builder: (context, state) => BlocProvider(
+          create: (context) => sl<AuthBloc>(),
+          child: const SingUpScreen(),
+        ),
       ),
     ],
   );
