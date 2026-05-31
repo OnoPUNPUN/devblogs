@@ -7,10 +7,16 @@ abstract interface class AuthRemoteDataSource {
     required String email,
     required String password,
   });
+
+  Future<AuthResponseModel> login({
+    required String email,
+    required String password,
+  });
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   static const String _registerEndpoint = '/auth/register';
+  static const String _loginEndpoint = '/auth/login';
 
   final ApiClient apiClient;
 
@@ -25,6 +31,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     final response = await apiClient.post(
       _registerEndpoint,
       data: {'username': username, 'email': email, 'password': password},
+    );
+
+    return AuthResponseModel.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<AuthResponseModel> login({
+    required String email,
+    required String password,
+  }) async {
+    final response = await apiClient.post(
+      _loginEndpoint,
+      data: {'email': email, 'password': password},
     );
 
     return AuthResponseModel.fromJson(response.data as Map<String, dynamic>);

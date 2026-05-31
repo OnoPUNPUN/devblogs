@@ -18,9 +18,16 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<AuthResponse> login({
     required String email,
     required String password,
-  }) {
-    // TODO: implement login
-    throw UnimplementedError();
+  }) async {
+    if (!await networkInfo.isConnected) {
+      throw const ConnectionFailure();
+    }
+
+    try {
+      return await remoteDataSource.login(email: email, password: password);
+    } on ServerException catch (e) {
+      throw ServerFailure(e.message);
+    }
   }
 
   @override

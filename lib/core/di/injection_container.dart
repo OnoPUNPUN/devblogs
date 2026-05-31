@@ -4,6 +4,7 @@ import 'package:devblogs/core/network/network_info.dart';
 import 'package:devblogs/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:devblogs/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:devblogs/features/auth/domain/repositories/auth_repository.dart';
+import 'package:devblogs/features/auth/domain/usecases/login_usecase.dart';
 import 'package:devblogs/features/auth/domain/usecases/register_usecase.dart';
 import 'package:devblogs/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -26,5 +27,7 @@ Future<void> init() async {
 
   sl.registerLazySingleton(() => RegisterUsecase(sl()));
 
-  sl.registerFactory(() => AuthBloc(registerUseCase: sl()));
+  sl.registerFactory(() => AuthBloc(registerUseCase: sl(), loginUseCase: sl()));
+
+  sl.registerLazySingleton(() => LoginUsecase(repository: sl()));
 }
