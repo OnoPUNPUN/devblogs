@@ -3,8 +3,22 @@ import 'package:devblogs/core/utils/app_logger.dart';
 
 class ApiClient {
   final Dio dio;
+  String? _token;
 
   ApiClient(this.dio);
+
+  void updateToken(String? token) {
+    _token = token;
+  }
+
+  Options _optionsWithAuth(Options? options) {
+    final newOptions = options ?? Options();
+    if (_token != null) {
+      newOptions.headers ??= {};
+      newOptions.headers!['Authorization'] = 'Bearer $_token';
+    }
+    return newOptions;
+  }
 
   Future<Response> get(
     String path, {
@@ -16,7 +30,7 @@ class ApiClient {
       final response = await dio.get(
         path,
         queryParameters: queryParameters,
-        options: options,
+        options: _optionsWithAuth(options),
       );
       AppLogger.i('GET Response: ${response.statusCode} - ${response.data}');
       return response;
@@ -38,7 +52,7 @@ class ApiClient {
         path,
         data: data,
         queryParameters: queryParameters,
-        options: options,
+        options: _optionsWithAuth(options),
       );
       AppLogger.i('POST Response: ${response.statusCode} - ${response.data}');
       return response;
@@ -60,7 +74,7 @@ class ApiClient {
         path,
         data: data,
         queryParameters: queryParameters,
-        options: options,
+        options: _optionsWithAuth(options),
       );
       AppLogger.i('PUT Response: ${response.statusCode} - ${response.data}');
       return response;
@@ -82,7 +96,7 @@ class ApiClient {
         path,
         data: data,
         queryParameters: queryParameters,
-        options: options,
+        options: _optionsWithAuth(options),
       );
       AppLogger.i('DELETE Response: ${response.statusCode} - ${response.data}');
       return response;

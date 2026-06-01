@@ -4,7 +4,7 @@ import 'package:devblogs/features/auth/presentation/pages/sign_up_screen.dart';
 import 'package:devblogs/features/auth/presentation/widgets/auth_field.dart';
 import 'package:devblogs/features/auth/presentation/widgets/auth_gradient_button.dart';
 import 'package:devblogs/features/auth/presentation/widgets/auth_notes.dart';
-import 'package:devblogs/features/blog/presentation/pages/blog_page.dart';
+import 'package:devblogs/features/blog/presentation/pages/blog_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -36,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
             }
 
             if (state is AuthSuccess) {
-              context.push(BlogPage.name);
+              context.push(BlogScreen.name);
             }
           },
           builder: (context, state) {

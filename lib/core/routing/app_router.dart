@@ -2,7 +2,11 @@ import 'package:devblogs/core/di/injection_container.dart';
 import 'package:devblogs/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:devblogs/features/auth/presentation/pages/login_screen.dart';
 import 'package:devblogs/features/auth/presentation/pages/sign_up_screen.dart';
-import 'package:devblogs/features/blog/presentation/pages/blog_page.dart';
+import 'package:devblogs/features/blog/domain/entities/blog.dart';
+import 'package:devblogs/features/blog/presentation/bloc/blog_bloc.dart';
+import 'package:devblogs/features/blog/presentation/pages/add_new_blog_screen.dart';
+import 'package:devblogs/features/blog/presentation/pages/blog_screen.dart';
+import 'package:devblogs/features/blog/presentation/pages/blog_viewer_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -27,9 +31,27 @@ class AppRouter {
         ),
       ),
       GoRoute(
-        path: BlogPage.name,
-        name: BlogPage.name,
-        builder: (context, state) => const BlogPage(),
+        path: BlogScreen.name,
+        name: BlogScreen.name,
+        builder: (context, state) => const BlogScreen(),
+      ),
+      GoRoute(
+        path: AddNewBlogScreen.name,
+        name: AddNewBlogScreen.name,
+        builder: (context, state) => BlocProvider(
+          create: (context) => sl<BlogBloc>(),
+          child: const AddNewBlogScreen(),
+        ),
+      ),
+      GoRoute(
+        path: BlogViewerPage.name,
+        name: BlogViewerPage.name,
+        builder: (context, state) => BlocProvider(
+          create: (context) => sl<BlogBloc>(),
+          child: BlogViewerPage(
+            blog: state.extra as Blog,
+          ),
+        ),
       ),
     ],
   );

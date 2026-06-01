@@ -33,7 +33,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       data: {'username': username, 'email': email, 'password': password},
     );
 
-    return AuthResponseModel.fromJson(response.data as Map<String, dynamic>);
+    final model = AuthResponseModel.fromJson(response.data as Map<String, dynamic>);
+    apiClient.updateToken(model.token);
+    return model;
   }
 
   @override
@@ -46,6 +48,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       data: {'email': email, 'password': password},
     );
 
-    return AuthResponseModel.fromJson(response.data as Map<String, dynamic>);
+    final model = AuthResponseModel.fromJson(response.data as Map<String, dynamic>);
+    apiClient.updateToken(model.token);
+    return model;
   }
 }
