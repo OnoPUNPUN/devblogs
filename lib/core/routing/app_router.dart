@@ -1,3 +1,4 @@
+import 'package:devblogs/core/auth/auth_session.dart';
 import 'package:devblogs/core/di/injection_container.dart';
 import 'package:devblogs/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:devblogs/features/auth/presentation/pages/login_screen.dart';
@@ -13,6 +14,23 @@ import 'package:go_router/go_router.dart';
 class AppRouter {
   static final router = GoRouter(
     initialLocation: '/',
+    refreshListenable: sl<AuthSession>(),
+    redirect: (context, state) {
+      final authSession = sl<AuthSession>();
+      final location = state.matchedLocation;
+      final isAuthRoute =
+          location == LoginScreen.name || location == SingUpScreen.name;
+
+      if (authSession.isAuthenticated && isAuthRoute) {
+        return BlogScreen.name;
+      }
+
+      if (!authSession.isAuthenticated && !isAuthRoute) {
+        return LoginScreen.name;
+      }
+
+      return null;
+    },
     routes: [
       GoRoute(
         path: LoginScreen.name,
@@ -48,9 +66,7 @@ class AppRouter {
         name: BlogViewerPage.name,
         builder: (context, state) => BlocProvider(
           create: (context) => sl<BlogBloc>(),
-          child: BlogViewerPage(
-            blog: state.extra as Blog,
-          ),
+          child: BlogViewerPage(blog: state.extra! as Blog),
         ),
       ),
     ],

@@ -1,3 +1,4 @@
+import 'package:devblogs/core/auth/auth_session.dart';
 import 'package:devblogs/core/network/api_client.dart';
 import 'package:devblogs/features/auth/data/models/auth_response_model.dart';
 
@@ -19,8 +20,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   static const String _loginEndpoint = '/auth/login';
 
   final ApiClient apiClient;
+  final AuthSession authSession;
 
-  AuthRemoteDataSourceImpl(this.apiClient);
+  AuthRemoteDataSourceImpl({
+    required this.apiClient,
+    required this.authSession,
+  });
 
   @override
   Future<AuthResponseModel> register({
@@ -33,8 +38,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       data: {'username': username, 'email': email, 'password': password},
     );
 
-    final model = AuthResponseModel.fromJson(response.data as Map<String, dynamic>);
-    apiClient.updateToken(model.token);
+    final model = AuthResponseModel.fromJson(
+      response.data as Map<String, dynamic>,
+    );
+    await authSession.saveToken(model.token);
     return model;
   }
 
@@ -48,8 +55,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       data: {'email': email, 'password': password},
     );
 
-    final model = AuthResponseModel.fromJson(response.data as Map<String, dynamic>);
-    apiClient.updateToken(model.token);
+    final model = AuthResponseModel.fromJson(
+      response.data as Map<String, dynamic>,
+    );
+    await authSession.saveToken(model.token);
     return model;
   }
 }

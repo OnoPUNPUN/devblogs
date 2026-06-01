@@ -4,6 +4,7 @@ import 'package:devblogs/features/auth/presentation/pages/login_screen.dart';
 import 'package:devblogs/features/auth/presentation/widgets/auth_field.dart';
 import 'package:devblogs/features/auth/presentation/widgets/auth_gradient_button.dart';
 import 'package:devblogs/features/auth/presentation/widgets/auth_notes.dart';
+import 'package:devblogs/features/blog/presentation/pages/blog_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -34,6 +35,10 @@ class _SingUpScreenState extends State<SingUpScreen> {
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(SnackBar(content: Text(state.message)));
+            }
+
+            if (state is AuthSuccess) {
+              context.go(BlogScreen.name);
             }
           },
           builder: (context, state) {

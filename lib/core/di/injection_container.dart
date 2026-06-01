@@ -1,3 +1,4 @@
+import 'package:devblogs/core/auth/auth_session.dart';
 import 'package:devblogs/core/network/api_client.dart';
 import 'package:devblogs/core/network/dio_provider.dart';
 import 'package:devblogs/core/network/network_info.dart';
@@ -17,19 +18,26 @@ import 'package:devblogs/features/blog/domain/usecases/upload_blog_usecase.dart'
 import 'package:devblogs/features/blog/presentation/bloc/blog_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
   // Core
+  final sharedPreferences = await SharedPreferences.getInstance();
+  sl.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
   sl.registerLazySingleton<InternetConnection>(() => InternetConnection());
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
   sl.registerLazySingleton(() => DioProvider.createDio());
   sl.registerLazySingleton(() => ApiClient(sl()));
+  sl.registerLazySingleton(
+    () => AuthSession(preferences: sl(), apiClient: sl()),
+  );
+  await sl<AuthSession>().restoreSession();
 
   // Auth Feature
   sl.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(sl()),
+    () => AuthRemoteDataSourceImpl(apiClient: sl(), authSession: sl()),
   );
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),

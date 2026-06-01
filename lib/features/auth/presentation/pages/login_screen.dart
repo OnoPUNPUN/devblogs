@@ -36,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
             }
 
             if (state is AuthSuccess) {
-              context.push(BlogScreen.name);
+              context.go(BlogScreen.name);
             }
           },
           builder: (context, state) {
